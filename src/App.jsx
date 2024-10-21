@@ -1,193 +1,175 @@
-// import React, { useRef, useEffect } from "react";
+
+
+// import React from "react";
 // import { Canvas } from "@react-three/fiber";
-// import { OrbitControls } from "@react-three/drei";
 // import { RigidBody, Physics } from "@react-three/rapier";
-// import { Race } from "./assets/track/Racw";
-// import { Vector3 } from "three";
 // import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
+// import { RaceTrackWalls } from "./assets/track/Track1/CherryBlossomRawTrack";
+// import { Map } from "./assets/track/Track1/WholeMap";
+// import BackgroundMusic from "./components/BackgroundMusic";
 
 // // Main App Component
 // export default function App() {
-
 //   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
+//     <>
+//     <div>Hello </div>
 
-//       <Physics gravity={[0, -90.81, 0]} debug >
-//         {/* <Model></Model>
-//         <Race />  */}
-//         <RigidBody type="fixed" position={[0, 0, 0]}>
-//           <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//             <planeGeometry args={[400, 400]} />
-//             <meshStandardMaterial color="green" />
-//           </mesh>
-//         </RigidBody>
+//     <Canvas
+//       shadows
+//       camera={{ fov: 60, near: 0.1, far: 2000, position: [0, 50, 200] }}
+//     >
 
-//         <Car/>
 
-//       </Physics>
+//       {/* Ambient and Directional Lighting */}
+//       <ambientLight intensity={1} />
+//       <directionalLight
+//         color={"#fbe8fd"}
+//         castShadow
+//         position={[85, 75, 0]}
+//         intensity={10}
+//         shadow-mapSize-width={2048}
+//         shadow-mapSize-height={2048}
+//         shadow-camera-left={-500}
+//         shadow-camera-right={500}
+//         shadow-camera-top={500}
+//         shadow-camera-bottom={-500}
+//         shadow-camera-near={1}
+//         shadow-camera-far={1500}
+//         shadow-bias={-0.001}
+//       />
+//       <Map />
 
-//       {/* OrbitControls */}
-//       <OrbitControls enablePan={false} enableZoom={true} enableRotate={true} />
-//     </Canvas>
-//   );
-// }
+//       <Physics gravity={[0, -50.81, 0]}  >
+//         {/* Race track and ground */}
 
-/////////////////////////////////////
-
-// import React, { useRef } from "react";
-// import { Canvas } from "@react-three/fiber";
-// import { Physics } from "@react-three/rapier";
-// import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
-// import { Race } from "./assets/track/Racw";
-
-// // Main App Component
-// export default function App() {
-//   const carRef = useRef();
-
-//   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
-
-//       <Physics gravity={[0, -9.81, 0]}>
-//         {/* Uncomment these lines if you want to include the track models */}
-//         {/* <Model /> */}
-//         {/* <Race /> */}
+//         <RaceTrackWalls />
 
 //         {/* Ground plane */}
-//         <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//           <planeGeometry args={[400, 400]} />
-//           <meshStandardMaterial color="green" />
-//         </mesh>
+//         <RigidBody type="fixed" position={[0, 0, 0]} >
+//           <mesh
+//             receiveShadow
+//             rotation={[-Math.PI / 2, 0, 0]}
+//             position={[0, 0, 0]}
+//           >
+//             <planeGeometry args={[1000, 1000]} />
+//             <meshStandardMaterial
+//               color="green"
+//               transparent={true}
+//               opacity={0}
+//             />
+//           </mesh>
+//         </RigidBody>
 
-//         {/* Car component (includes FirstPersonCamera) */}
-//         <Car ref={carRef} />
+//         {/* Car component with built-in camera follow */}
+//         <Car />
 //       </Physics>
+//       {/* <BackgroundMusic/> */}
+
+
 //     </Canvas>
+//     </>
 //   );
 // }
-
-// import React, { useRef } from "react";
-// import { Canvas } from "@react-three/fiber";
-// import { Physics, RigidBody } from "@react-three/rapier";
-// import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
-// import { Race } from "./assets/track/Racw";
-
-// // Main App Component
-// export default function App() {
-//   const carRef = useRef();
-
-//   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
-
-//       <Physics gravity={[0, -9.81, 0]}>
-//         {/* Uncomment these lines if you want to include the track models */}
-//         {/* <Model /> */}
-//         {/* <Race /> */}
-
-//         {/* Ground plane */}
-//         <RigidBody type="fixed">
-//           <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//             <planeGeometry args={[400, 400]} />
-//             <meshStandardMaterial color="green" />
-//           </mesh>
-//         </RigidBody>
-
-//         {/* Reference Blocks */}
-//         <RigidBody type="fixed" position={[0, 1, 0]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="red" />
-//           </mesh>
-//         </RigidBody>
-
-//         <RigidBody type="fixed" position={[10, 1, 10]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="blue" />
-//           </mesh>
-//         </RigidBody>
-
-//         <RigidBody type="fixed" position={[-10, 1, -10]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="yellow" />
-//           </mesh>
-//         </RigidBody>
-
-//         {/* Car component (includes FirstPersonCamera) */}
-//         <Car ref={carRef} />
-//       </Physics>
-//     </Canvas>
-//   );
-// }
-
-//////////////////////////////////
-
-import React from "react";
+import React, { useRef,useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RigidBody, Physics } from "@react-three/rapier";
 import { Car } from "./components/Car";
 import { RaceTrackWalls } from "./assets/track/Track1/CherryBlossomRawTrack";
 import { Map } from "./assets/track/Track1/WholeMap";
+import { Timer } from "./components/Timer";
+import BackgroundMusic from "./components/BackgroundMusic";
+import DustParticles from "./components/DustParticles/DustParticles";
+import SkidMarks from "./components/SkidMarks/SkidsMarks";
 
-// Main App Component
 export default function App() {
+  const [startTimer, setStartTimer] = useState(false);
+
+  // Listen for arrow key presses
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        setStartTimer(true); // Start the timer when an arrow key is pressed
+      }
+      if (event.key === "r" || event.key === "R") {
+        setStartTimer(false); // Reset the timer when "R" is pressed
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown); // Cleanup event listener on unmount
+    };
+  }, []);
+
+  const carRef = useRef();
+
   return (
-    <Canvas
-      shadows
-      camera={{ fov: 60, near: 0.1, far: 2000, position: [0, 50, 200] }}
-    >
-      {/* Ambient and Directional Lighting */}
-      <ambientLight intensity={1} />
-      <directionalLight
-        color={"#fbe8fd"}
-        castShadow
-        position={[85, 75, 0]}
-        intensity={10}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-camera-left={-500}
-        shadow-camera-right={500}
-        shadow-camera-top={500}
-        shadow-camera-bottom={-500}
-        shadow-camera-near={1}
-        shadow-camera-far={1500}
-        shadow-bias={-0.001}
-      />
-      <Map />
+    <div style={{ position: "relative", width: "100%", height: "100vh" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          color: "white",
+          fontSize: "24px",
+          zIndex: 1, // Ensures it stays on top of the Canvas
+        }}
+      >
+        <Timer startTimer={startTimer} />
+      </div>
 
-      <Physics gravity={[0, -50.81, 0]} debug >
-        {/* Race track and ground */}
+      <Canvas
+        shadows
+        camera={{ fov: 60, near: 0.1, far: 2000, position: [0, 50, 200] }}
+        style={{ position: "absolute", top: 0, left: 0 }}
+      >
+        {/* Ambient and Directional Lighting */}
+        <ambientLight intensity={1} />
+        <directionalLight
+          color={"#fbe8fd"}
+          castShadow
+          position={[85, 75, 0]}
+          intensity={10}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+          shadow-camera-left={-500}
+          shadow-camera-right={500}
+          shadow-camera-top={500}
+          shadow-camera-bottom={-500}
+          shadow-camera-near={1}
+          shadow-camera-far={1500}
+          shadow-bias={-0.001}
+        />
 
-        <RaceTrackWalls />
+        <Map />
 
-        {/* Ground plane */}
-        <RigidBody type="fixed" position={[0, 0, 0]} >
-          <mesh
-            receiveShadow
-            rotation={[-Math.PI / 2, 0, 0]}
-            position={[0, 0, 0]}
-          >
-            <planeGeometry args={[1000, 1000]} />
-            <meshStandardMaterial
-              color="green"
-              transparent={true}
-              opacity={0}
-            />
-          </mesh>
-        </RigidBody>
+        <Physics gravity={[0, -90.81, 0]} debug>
+          {/* Race track and ground */}
+          <RaceTrackWalls />
+
+          {/* Ground plane */}
+          <RigidBody type="fixed" position={[0, 0, 0]}>
+            <mesh
+              receiveShadow
+              rotation={[-Math.PI / 2, 0, 0]}
+              position={[0, 0, 0]}
+            >
+              <planeGeometry args={[1000, 1000]} />
+              <meshStandardMaterial
+                color="green"
+                transparent={true}
+                opacity={0}
+              />
+            </mesh>
+          </RigidBody>
 
         {/* Car component with built-in camera follow */}
-        <Car />
+        <Car rigidBody={carRef} />
+        <SkidMarks carRef={carRef} />
+        <DustParticles carRef={carRef} />
       </Physics>
     </Canvas>
+  </div>
   );
 }
