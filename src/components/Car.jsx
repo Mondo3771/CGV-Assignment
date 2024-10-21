@@ -1050,7 +1050,7 @@ export function Car(props) {
     cameraRef.current.position.lerp(targetPosition, delta * 10);
 
     // Update camera to look at the car
-    lookAtTarget.current.lerp(carPosition, delta * 5);
+    lookAtTarget.current.lerp(carPosition, delta * 10);
     cameraRef.current.lookAt(lookAtTarget.current);
   });
 
