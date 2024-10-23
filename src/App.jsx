@@ -223,14 +223,14 @@ export default function App() {
                 shadow-camera-far={1500}
                 shadow-bias={-0.001}
               />
-              {/* {activeGroup == 2 ? <Map/> : <WholeNetherMap />} */}
+              {activeGroup == 2 ? <Map/> : <WholeNetherMap />}
 
               <Physics gravity={[0, -90.81, 0]} paused={isPaused}>
-                {/* {activeGroup == 2 ? (
+                {activeGroup == 2 ? (
                   <RaceTrackWalls />
                 ) : (
                   <NetherRawTrackWalls />
-                )} */}
+                )}
                 <RigidBody type="fixed" position={[0, 0, 0]}>
                   <mesh
                     receiveShadow
