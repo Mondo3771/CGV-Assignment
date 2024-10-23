@@ -36,8 +36,8 @@ export function Car({rigidBody, onSpeedChange, ...props}) {
   const [boostActive, setBoostActive] = useState(false);
   const [boostTimer, setBoostTimer] = useState(0);
 
-  const FORCE = boostActive ? 13 : 50; // Increase force when boost is active
-  let TURN = boostActive ? 1 : 3;
+  const FORCE = boostActive ? 70 : 50; // Increase force when boost is active
+  let TURN = boostActive ? 7 : 3;
   const maxSpeed = 200;
   const [carSpeed,setCarSPeed]=useState(0)
 
@@ -178,14 +178,14 @@ export function Car({rigidBody, onSpeedChange, ...props}) {
 
     if (isFirstPerson) {
       // Set the camera's position to be near the car's bonnet
-        cameraRef.current.position.set(carPosition.x, carPosition.y +1.1, carPosition.z -1);
+        cameraRef.current.position.set(carPosition.x +0.1, carPosition.y +1.2, carPosition.z -1.2);
         
         // Get the car's quaternion (rotation)
         const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion rotation
         cameraRef.current.quaternion.copy(carQuaternion); // Update the camera's quaternion to match the car's rotation
 
         // Define a direction to look at (adjust these values to change the camera's facing position)
-        const lookAtOffset = new THREE.Vector3(1.5, -9, -0.5); // Forward direction relative to the car
+        const lookAtOffset = new THREE.Vector3(-0.5, -14, 0); // Forward direction relative to the car
         lookAtOffset.applyQuaternion(carQuaternion); // Rotate the look-at offset by the car's rotation
 
         // Calculate the target position for the camera to look at
