@@ -180,44 +180,82 @@ export function Car({ rigidBody, onSpeedChange, ...props }) {
     // cameraRef.current.lookAt(lookAtTarget.current);
 
     if (isFirstPerson) {
-      // Set the camera's position to be near the car's bonnet
-      cameraRef.current.position.set(
-        carPosition.x,
-        carPosition.y + 1.1,
-        carPosition.z - 1
-      );
+      // // Set the camera's position to be near the car's bonnet
+      // cameraRef.current.position.set(
+      //   carPosition.x,
+      //   carPosition.y + 1.1,
+      //   carPosition.z - 1
+      // );
 
-      // Get the car's quaternion (rotation)
-      const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion rotation
-      cameraRef.current.quaternion.copy(carQuaternion); // Update the camera's quaternion to match the car's rotation
+      // // Get the car's quaternion (rotation)
+      // const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion rotation
+      // cameraRef.current.quaternion.copy(carQuaternion); // Update the camera's quaternion to match the car's rotation
 
-      // Define a direction to look at (adjust these values to change the camera's facing position)
-      const lookAtOffset = new THREE.Vector3(1.5, -9, -0.5); // Forward direction relative to the car
-      lookAtOffset.applyQuaternion(carQuaternion); // Rotate the look-at offset by the car's rotation
+      // // Define a direction to look at (adjust these values to change the camera's facing position)
+      // const lookAtOffset = new THREE.Vector3(1.5, -9, -0.5); // Forward direction relative to the car
+      // lookAtOffset.applyQuaternion(carQuaternion); // Rotate the look-at offset by the car's rotation
 
-      // Calculate the target position for the camera to look at
-      const targetPosition = cameraRef.current.position
-        .clone()
-        .add(lookAtOffset);
+      // // Calculate the target position for the camera to look at
+      // const targetPosition = cameraRef.current.position
+      //   .clone()
+      //   .add(lookAtOffset);
 
-      // Make the camera look at the calculated target position
-      cameraRef.current.lookAt(targetPosition);
+      // // Make the camera look at the calculated target position
+      // cameraRef.current.lookAt(targetPosition);
+      
+        // // Third-person camera behind and above the car
+        // const carRotation = rigidBody.current.rotation();
+        // const cameraOffset = new THREE.Vector3(1, 3, 0).applyQuaternion(
+        //   carRotation
+        // ); // Camera offset relative to the car's rotation
+        // const targetPosition = new THREE.Vector3(
+        //   carPosition.x + cameraOffset.x,
+        //   carPosition.y + cameraOffset.y,
+        //   carPosition.z + cameraOffset.z
+        // );
+  
+        // cameraRef.current.position.lerp(targetPosition, delta * 10);
+  
+        // lookAtTarget.current.lerp(carPosition, delta * 10);
+        // cameraRef.current.lookAt(lookAtTarget.current);
+
+        // Position the camera relative to the car's bonnet
+        const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion (rotation)
+        const firstPersonOffset = new THREE.Vector3(1, -2, 0); // Adjust offset as needed
+
+        // Apply the car's rotation to the offset to keep it fixed relative to the car
+        firstPersonOffset.applyQuaternion(carQuaternion);
+
+        // Set the camera position based on the car's current position plus the offset
+        cameraRef.current.position.set(
+          carPosition.x + firstPersonOffset.x,
+          carPosition.y + firstPersonOffset.y,
+          carPosition.z + firstPersonOffset.z
+        );
+
+        // Define a look-at offset to control the camera's viewing direction
+        const lookAtOffset = new THREE.Vector3(0, -1, 0).applyQuaternion(carQuaternion);
+
+        // Calculate where the camera should look, then update it
+        const targetPosition = cameraRef.current.position.clone().add(lookAtOffset);
+        cameraRef.current.lookAt(targetPosition);
+
     } else {
-      // Third-person camera behind and above the car
-      const carRotation = rigidBody.current.rotation();
-      const cameraOffset = new THREE.Vector3(2, 4, 0).applyQuaternion(
-        carRotation
-      ); // Camera offset relative to the car's rotation
-      const targetPosition = new THREE.Vector3(
-        carPosition.x + cameraOffset.x,
-        carPosition.y + cameraOffset.y,
-        carPosition.z + cameraOffset.z
-      );
+        // Third-person camera behind and above the car
+        const carRotation = rigidBody.current.rotation();
+        const cameraOffset = new THREE.Vector3(2, 4, 0).applyQuaternion(
+          carRotation
+        ); // Camera offset relative to the car's rotation
+        const targetPosition = new THREE.Vector3(
+          carPosition.x + cameraOffset.x,
+          carPosition.y + cameraOffset.y,
+          carPosition.z + cameraOffset.z
+        );
 
-      cameraRef.current.position.lerp(targetPosition, delta * 10);
+        cameraRef.current.position.lerp(targetPosition, delta * 10);
 
-      lookAtTarget.current.lerp(carPosition, delta * 10);
-      cameraRef.current.lookAt(lookAtTarget.current);
+        lookAtTarget.current.lerp(carPosition, delta * 10);
+        cameraRef.current.lookAt(lookAtTarget.current);
     }
   });
 
@@ -277,19 +315,28 @@ export function Car({ rigidBody, onSpeedChange, ...props }) {
               receiveShadow
             />
           </group>
+
+          {/* <PerspectiveCamera
+            makeDefault={isFirstPerson}
+            fov={75}
+            position={[4, 6, 0]} // Position relative to car
+            rotation={[4.7, 0, 4.8]}
+          /> */}
         </RigidBody>
         <GameWithSound />
         {/* <Speedometer speed={maxSpeed} /> */}
       </group>
 
+    
       <PerspectiveCamera
         ref={cameraRef}
         makeDefault
         fov={75}
-        position={[0, 5, -10]}
+        position={[0, 1, 0]}
         near={0.1}
         far={85}
       />
+      
       <Boost Boostarray={Boostarray} />
     </>
   );
