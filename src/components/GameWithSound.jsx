@@ -5,52 +5,72 @@ import skid from '../assets/audio_files/Skidsound.mp3'; // Path to your tire ski
 const GameWithSound = () => {
   const [carAudio] = useState(new Audio(acc)); // Create an audio object for the car sound
   const [tireAudio] = useState(new Audio(skid)); // Create an audio object for the tire sound
+  const [keyHeldStart, setKeyHeldStart] = useState(null); // Track when the key was pressed
 
   useEffect(() => {
-   
+    const shortPressStart = 5; // Start point for short key press (in seconds)
+    const longPressStart = 12; // Start point for long key press (in seconds)
+    const loopEnd = 20; // Define the loop end point (in seconds)
+    let intervalId; // Variable to store the interval ID
+
     carAudio.volume = 0.65; 
     tireAudio.volume = 0.4;
-    
+
     const handleKeyDown = (event) => {
-      if (event.code === 'ArrowUp' && carAudio.paused) {
-        playCarSound(); 
-      }
-      else if (event.code === 'ArrowRight' && tireAudio.paused) {
+      if (event.code === 'ArrowUp') {
+        if (carAudio.paused) {
+          playCarSound(); // Start from 5s for every press
+        }
+        if (!keyHeldStart) {
+          setKeyHeldStart(Date.now()); // Record the time when the key is pressed
+        }
+      } else if (event.code === 'ArrowRight' && tireAudio.paused) {
         playTireSound(); 
-      }
-      else if (event.code === 'ArrowLeft' && tireAudio.paused) {
+      } else if (event.code === 'ArrowLeft' && tireAudio.paused) {
         playTireSound(); 
       }
     };
 
-  
     const handleKeyUp = (event) => {
       if (event.code === 'ArrowUp') {
-        stopCarSound(); 
-      }
-      else if (event.code === 'ArrowRight') {
+        stopCarSound(); // Stop the car sound when key is released
+        setKeyHeldStart(null); // Reset key held start time
+      } else if (event.code === 'ArrowRight') {
         stopTireSound(); 
-      }
-      else if (event.code === 'ArrowLeft') {
+      } else if (event.code === 'ArrowLeft') {
         stopTireSound();
       }
     };
 
-
+ 
     const playCarSound = () => {
-      carAudio.currentTime = 0; 
+      carAudio.currentTime = shortPressStart; // Set to 5 seconds every time the key is pressed
       carAudio.play().catch((error) => {
-        console.error('Car audio play failed:', error); // Handle any errors
+        console.error('Car audio play failed:', error);
       });
+
+      // For looping if the key is held down long enough
+      intervalId = setInterval(() => {
+        if (keyHeldStart) {
+          const heldDuration = Date.now() - keyHeldStart;
+          if (heldDuration >= 18000 && !isLongPress) { // Check if held for 18 seconds
+            carAudio.currentTime = longPressStart; // Set to 12 seconds for looping
+            carAudio.loop = true; // Enable looping
+            setIsLongPress(true); // Set long press flag
+          } else if (heldDuration < 18000) {
+            carAudio.loop = false; // Disable looping for short press
+            setIsLongPress(false); // Reset long press flag
+          }
+        }
+      }, 1000); // Check every second
     };
 
-    
     const stopCarSound = () => {
-      carAudio.pause(); 
-      carAudio.currentTime = 0; 
+      carAudio.pause(); // Stop the audio
+      carAudio.currentTime = shortPressStart; // Reset to 5 seconds for the next play
+      clearInterval(intervalId); // Clear the interval when stopping the sound
     };
 
-    
     const playTireSound = () => {
       tireAudio.currentTime = 0; 
       tireAudio.play().catch((error) => {
@@ -58,7 +78,6 @@ const GameWithSound = () => {
       });
     };
 
-    
     const stopTireSound = () => {
       tireAudio.pause(); 
       tireAudio.currentTime = 0; 
@@ -68,14 +87,15 @@ const GameWithSound = () => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    // Cleanup event listeners when component is unmounted
+    // Cleanup event listeners and intervals when component is unmounted
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      clearInterval(intervalId); // Clear the interval when unmounting
     };
-  }, [carAudio, tireAudio]);
+  }, [carAudio, tireAudio, keyHeldStart]); // Dependencies for useEffect
 
   return null; // This component doesn't render anything visually 
 };
 
-export default GameWithSound;
+export default GameWithSound; // Export the component
