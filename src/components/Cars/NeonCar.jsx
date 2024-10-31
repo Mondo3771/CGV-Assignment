@@ -234,7 +234,7 @@ export function NeonCar({ rigidBody, onSpeedChange, ...props }) {
           colliders="cuboid"
           position={[10, 2, 0]} // Initial position
           mass={20}
-          rotation={[Math.PI / 2, 0, 0]} // Initial rotation
+          rotation={[0, Math.PI / 2, Math.PI / 2]} // Initial rotation
           linearDamping={0.5}
           // angularDamping={0.8}
           scale={[0.5, 0.5, 0.5]}
@@ -243,8 +243,8 @@ export function NeonCar({ rigidBody, onSpeedChange, ...props }) {
             <mesh
               geometry={nodes.Object_305.geometry}
               material={materials["super_car.png"]}
-              position={[0,0,0]}
-              rotation={[-Math.PI/2, 0, 0]}
+              position={[1,0,0]}
+              rotation={[Math.PI/2, -11*Math.PI/10, Math.PI/2]}
             />
           </group>
         </RigidBody>

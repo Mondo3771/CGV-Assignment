@@ -221,7 +221,9 @@ export function Car({ rigidBody, onSpeedChange, ...props }) {
 
         // Position the camera relative to the car's bonnet
         const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion (rotation)
-        const firstPersonOffset = new THREE.Vector3(1, -2, 0); // Adjust offset as needed
+        const firstPersonOffset = new THREE.Vector3(1, -0.95, 0); // Adjust offset as needed
+        // const firstPersonOffset = new THREE.Vector3(1.1, 0, 0);
+        // const firstPersonOffset = new THREE.Vector3(1, -2, 0);
 
         // Apply the car's rotation to the offset to keep it fixed relative to the car
         firstPersonOffset.applyQuaternion(carQuaternion);

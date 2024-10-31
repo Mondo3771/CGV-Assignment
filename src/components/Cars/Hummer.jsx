@@ -167,61 +167,45 @@ export function Hummer({ rigidBody, onSpeedChange, ...props }) {
       }
     });
 
-    // Adjust camera to follow the car smoothly
-    // const carRotation = rigidBody.current.rotation();
-    // const cameraOffset = new THREE.Vector3(2, 6, 0).applyQuaternion(carRotation); // Camera offset relative to the car's rotation
-    // const targetPosition = new THREE.Vector3(
-    //   carPosition.x + cameraOffset.x,
-    //   carPosition.y + cameraOffset.y,
-    //   carPosition.z + cameraOffset.z
-    // );
-
-    // // Lerp camera position for smooth movement
-    // cameraRef.current.position.lerp(targetPosition, delta * 10);
-
-    // // Update camera to look at the car
-    // lookAtTarget.current.lerp(carPosition, delta * 10);
-    // cameraRef.current.lookAt(lookAtTarget.current);
-
     if (isFirstPerson) {
-      // Set the camera's position to be near the car's bonnet
-      cameraRef.current.position.set(
-        carPosition.x,
-        carPosition.y + 1.1,
-        carPosition.z - 1
-      );
 
-      // Get the car's quaternion (rotation)
-      const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion rotation
-      cameraRef.current.quaternion.copy(carQuaternion); // Update the camera's quaternion to match the car's rotation
+        // Position the camera relative to the car's bonnet
+        const carQuaternion = rigidBody.current.rotation(); // Get the car's quaternion (rotation)
+        const firstPersonOffset = new THREE.Vector3(1.1, 0, 0); // Adjust offset as needed
 
-      // Define a direction to look at (adjust these values to change the camera's facing position)
-      const lookAtOffset = new THREE.Vector3(1.5, -9, -0.5); // Forward direction relative to the car
-      lookAtOffset.applyQuaternion(carQuaternion); // Rotate the look-at offset by the car's rotation
+        // Apply the car's rotation to the offset to keep it fixed relative to the car
+        firstPersonOffset.applyQuaternion(carQuaternion);
 
-      // Calculate the target position for the camera to look at
-      const targetPosition = cameraRef.current.position
-        .clone()
-        .add(lookAtOffset);
+        // Set the camera position based on the car's current position plus the offset
+        cameraRef.current.position.set(
+          carPosition.x + firstPersonOffset.x,
+          carPosition.y + firstPersonOffset.y,
+          carPosition.z + firstPersonOffset.z
+        );
 
-      // Make the camera look at the calculated target position
-      cameraRef.current.lookAt(targetPosition);
+        // Define a look-at offset to control the camera's viewing direction
+        const lookAtOffset = new THREE.Vector3(0, -1, 0).applyQuaternion(carQuaternion);
+
+        // Calculate where the camera should look, then update it
+        const targetPosition = cameraRef.current.position.clone().add(lookAtOffset);
+        cameraRef.current.lookAt(targetPosition);
+
     } else {
-      // Third-person camera behind and above the car
-      const carRotation = rigidBody.current.rotation();
-      const cameraOffset = new THREE.Vector3(2, 4, 0).applyQuaternion(
-        carRotation
-      ); // Camera offset relative to the car's rotation
-      const targetPosition = new THREE.Vector3(
-        carPosition.x + cameraOffset.x,
-        carPosition.y + cameraOffset.y,
-        carPosition.z + cameraOffset.z
-      );
+        // Third-person camera behind and above the car
+        const carRotation = rigidBody.current.rotation();
+        const cameraOffset = new THREE.Vector3(2, 4, 0).applyQuaternion(
+          carRotation
+        ); // Camera offset relative to the car's rotation
+        const targetPosition = new THREE.Vector3(
+          carPosition.x + cameraOffset.x,
+          carPosition.y + cameraOffset.y,
+          carPosition.z + cameraOffset.z
+        );
 
-      cameraRef.current.position.lerp(targetPosition, delta * 10);
+        cameraRef.current.position.lerp(targetPosition, delta * 10);
 
-      lookAtTarget.current.lerp(carPosition, delta * 10);
-      cameraRef.current.lookAt(lookAtTarget.current);
+        lookAtTarget.current.lerp(carPosition, delta * 10);
+        cameraRef.current.lookAt(lookAtTarget.current);
     }
   });
 
@@ -233,8 +217,8 @@ export function Hummer({ rigidBody, onSpeedChange, ...props }) {
           type="dynamic"
           colliders="cuboid"
           position={[10, 2, 0]} // Initial position
-          mass={200}
-          rotation={[0, 0, 0]} // Initial rotation
+          mass={20}
+          rotation={[0, Math.PI / 4, Math.PI / 2]} // Initial rotation
           linearDamping={0.5}
           // angularDamping={0.8}
           scale={[0.4, 0.4, 0.4]}
