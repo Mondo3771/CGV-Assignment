@@ -1,148 +1,39 @@
-// import React, { useRef, useEffect } from "react";
-// import { Canvas } from "@react-three/fiber";
-// import { OrbitControls } from "@react-three/drei";
-// import { RigidBody, Physics } from "@react-three/rapier";
-// import { Race } from "./assets/track/Racw";
-// import { Vector3 } from "three";
-// import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
-
-// // Main App Component
-// export default function App() {
-
-//   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
-
-//       <Physics gravity={[0, -90.81, 0]} debug >
-//         {/* <Model></Model>
-//         <Race />  */}
-//         <RigidBody type="fixed" position={[0, 0, 0]}>
-//           <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//             <planeGeometry args={[400, 400]} />
-//             <meshStandardMaterial color="green" />
-//           </mesh>
-//         </RigidBody>
-
-//         <Car/>
-
-//       </Physics>
-
-//       {/* OrbitControls */}
-//       <OrbitControls enablePan={false} enableZoom={true} enableRotate={true} />
-//     </Canvas>
-//   );
-// }
-
-/////////////////////////////////////
-
-// import React, { useRef } from "react";
-// import { Canvas } from "@react-three/fiber";
-// import { Physics } from "@react-three/rapier";
-// import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
-// import { Race } from "./assets/track/Racw";
-
-// // Main App Component
-// export default function App() {
-//   const carRef = useRef();
-
-//   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
-
-//       <Physics gravity={[0, -9.81, 0]}>
-//         {/* Uncomment these lines if you want to include the track models */}
-//         {/* <Model /> */}
-//         {/* <Race /> */}
-
-//         {/* Ground plane */}
-//         <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//           <planeGeometry args={[400, 400]} />
-//           <meshStandardMaterial color="green" />
-//         </mesh>
-
-//         {/* Car component (includes FirstPersonCamera) */}
-//         <Car ref={carRef} />
-//       </Physics>
-//     </Canvas>
-//   );
-// }
-
-// import React, { useRef } from "react";
-// import { Canvas } from "@react-three/fiber";
-// import { Physics, RigidBody } from "@react-three/rapier";
-// import { Car } from "./components/Car";
-// import Model from "./assets/track/FullRaceTrackRaw";
-// import { Race } from "./assets/track/Racw";
-
-// // Main App Component
-// export default function App() {
-//   const carRef = useRef();
-
-//   return (
-//     <Canvas shadows>
-//       <ambientLight intensity={0.5} />
-//       <directionalLight castShadow position={[10, 20, 15]} intensity={1.5} />
-
-//       <Physics gravity={[0, -9.81, 0]}>
-//         {/* Uncomment these lines if you want to include the track models */}
-//         {/* <Model /> */}
-//         {/* <Race /> */}
-
-//         {/* Ground plane */}
-//         <RigidBody type="fixed">
-//           <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-//             <planeGeometry args={[400, 400]} />
-//             <meshStandardMaterial color="green" />
-//           </mesh>
-//         </RigidBody>
-
-//         {/* Reference Blocks */}
-//         <RigidBody type="fixed" position={[0, 1, 0]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="red" />
-//           </mesh>
-//         </RigidBody>
-
-//         <RigidBody type="fixed" position={[10, 1, 10]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="blue" />
-//           </mesh>
-//         </RigidBody>
-
-//         <RigidBody type="fixed" position={[-10, 1, -10]}>
-//           <mesh castShadow>
-//             <boxGeometry args={[2, 2, 2]} />
-//             <meshStandardMaterial color="yellow" />
-//           </mesh>
-//         </RigidBody>
-
-//         {/* Car component (includes FirstPersonCamera) */}
-//         <Car ref={carRef} />
-//       </Physics>
-//     </Canvas>
-//   );
-// }
-
 //////////////////////////////////
 
-import React, { useRef } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { RigidBody, Physics } from "@react-three/rapier";
 import { Car } from "./components/Car";
 import { RaceTrackWalls } from "./assets/track/Track1/CherryBlossomRawTrack";
 import { Map } from "./assets/track/Track1/WholeMap";
 import DustParticles from "./components/DustParticles/DustParticles";
 import SkidMarks from "./components/SkidMarks/SkidsMarks";
+import SmokeEffect from "./components/SmokeEffect/SmokeEffect";
 
 // Main App Component
 export default function App() {
   const carRef = useRef();
+  const [showSmoke, setShowSmoke] = useState(true); // Controls SmokeEffect rendering
+  const initialPositionRef = useRef(null);
+
+   // Set the initial position of the car when it mounts
+   useEffect(() => {
+    if (carRef.current) {
+      initialPositionRef.current = carRef.current.position.clone();
+    }
+  }, []);
+
+  // Use `useFrame` to check if the car has moved from its initial position
+  useFrame(() => {
+    if (carRef.current && initialPositionRef.current && showSmoke) {
+      const currentPosition = carRef.current.position.clone();
+
+      // Compare current position with initial position
+      if (!currentPosition.equals(initialPositionRef.current)) {
+        setShowSmoke(false);  // Stop rendering the SmokeEffect
+      }
+    }
+  });
 
   return (
     <Canvas
@@ -190,9 +81,13 @@ export default function App() {
         </RigidBody>
 
         {/* Car component with built-in camera follow */}
+        <Suspense>
+
         <Car rigidBody={carRef} />
-        <SkidMarks carRef={carRef} />
-        <DustParticles carRef={carRef} />
+        {/* <SkidMarks carRef={carRef} /> */}
+        {showSmoke && <SmokeEffect carRef={carRef} />}
+          <DustParticles carRef={carRef} />
+        </Suspense>
       </Physics>
     </Canvas>
   );
