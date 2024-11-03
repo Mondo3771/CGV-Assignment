@@ -9,9 +9,10 @@ import {
 } from "firebase/firestore";
 import "./styles.css";
 
-export default function LeaderBoard({ mapNum, time, setEnd }) {
+export default function LeaderBoard({ mapNum, time, setEnd,end }) {
   // const mapNum = 1;
   // const time = 10;
+  
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [myID, setMyID] = useState("");
@@ -70,6 +71,7 @@ export default function LeaderBoard({ mapNum, time, setEnd }) {
         {submitted ? (
           <>
             <h1 className="bebas-neue-regular">Leaderboard</h1>
+            {mapNum===1?<h1>Cherry Blossom</h1>:mapNum===2?<h1>Nether</h1>:<h1>End Map</h1>}
             <table className="styled-table">
               <tbody>
                 <tr className="active-row">

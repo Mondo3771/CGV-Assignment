@@ -39,14 +39,14 @@ export default function App() {
   const handleStartGame = () => setStartGame(true); // Start the game
   const onCarIndex = (i) => setCarIndex(i);
   const [end, setEnd] = useState(false);
-  
+
   const gameOver = () => {
     setEnd(false);
     setStartGame(false);
+    setLaps(0);
     console.log("Game Over");
   };
   const carRef = useRef();
-
   const [Laps, setLaps] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
 
@@ -100,6 +100,7 @@ export default function App() {
     setActiveGroup(track); // Set the selected track
     setLoading(true); // Start loading process
   };
+  
 
   return (
     <>
@@ -116,6 +117,7 @@ export default function App() {
             <PauseMenu
               setIsPaused={setIsPaused}
               setStartGame={setStartGame}
+              setLaps={setLaps}
               setFog={setFog}
               setShadows={setShadows}
               Fog={Fog}
@@ -127,9 +129,9 @@ export default function App() {
               mapNum={activeGroup}
               time={totalTime}
               setEnd={gameOver}
+              end={end}
             />
           )}
-
           <div style={{ position: "relative", width: "100%", height: "100vh" }}>
             <Suspense fallback={<Loader progress={progress} />}>
               <div
@@ -146,12 +148,15 @@ export default function App() {
                   startTimer={startTimer}
                   Laps={Laps}
                   setTotalTime={setTotalTime}
+                  IsPaused={isPaused}
+                  end={end}
+
                 />
               </div>
               <HUD
                 speed={carSpeed}
                 currentLap={Laps - 1}
-                maxLap={.5}
+                maxLap={activeGroup===1?2:activeGroup===2?3:4}
                 setEnd={setEnd}
                 setTimer={(i) => setStartTimer(i)}
                 setLaps={setLaps}
