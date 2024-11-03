@@ -73,17 +73,34 @@ if(time>0 && !end){
   }
 
   return (
-    <div style={{color:"white"}}>
-        <div className='bebas-neue-regular'>
-          TIME
-        </div>
-        <div className='bebas-neue-regular'>
-          {mins}:{secs}
-        </div>
-      <ul style={{listStyleType:"none"}}>
+    <div style={{ color: "white" }}>
+      <div
+        style={{
+          position: "fixed",
+          right: "150px",
+          top: "0px",
+        }}
+        className="bebas-neue-regular"
+      >
+        TIME
+      </div>
+      <div
+        style={{
+          position: "fixed",
+          right: "10px",
+          top: "0px",
+        }}
+        className="bebas-neue-regular"
+      >
+        {mins}:{secs}
+      </div>
+      <ul style={{ listStyleType: "none",
+        fontSize: "35px",
+        paddingTop:'10px'
+       }}>
         {Object.entries(LapTimes).map(([lap, lapTime]) => (
           <li key={lap}>
-            {lap}: {lapTime} 
+            {lap}: {lapTime}
           </li>
         ))}
       </ul>
