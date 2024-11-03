@@ -50,4 +50,4 @@ export function NetherCheckPoints(props) {
   );
 }
 
-useGLTF.preload("/NetherCheckPoints.glb");
+useGLTF.preload("/~scarhatt/NetherCheckPoints.glb");

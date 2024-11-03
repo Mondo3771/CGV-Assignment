@@ -11,7 +11,7 @@ import { getBaseUrl } from "../../utils/getURL";
 import Checkpoint from "../Checkpoint";
 
 export function Car({ rigidBody, onSpeedChange,map, ...props }) {
-  const { nodes, materials } = useGLTF(`/Car.glb`);
+  const { nodes, materials } = useGLTF(`/~scarhatt/Car.glb`);
   // const rigidBody = useRef();
   const carRef = useRef();
   const cameraRef = useRef();
@@ -332,4 +332,4 @@ export function Car({ rigidBody, onSpeedChange,map, ...props }) {
   );
 }
 
-useGLTF.preload(`/Car.glb`);
+useGLTF.preload(`/~scarhatt/Car.glb`);

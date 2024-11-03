@@ -8,7 +8,7 @@ import { useGLTF } from '@react-three/drei'
 
 export function CherryBlossomCheckPoints(props) {
   const { nodes, materials } = useGLTF(
-    "/CherryBlossomCheckPoints.glb"
+    "/~scarhatt/CherryBlossomCheckPoints.glb"
   );
   return (
     <group {...props} dispose={null} position={[5,-76,0]}>
@@ -24,4 +24,4 @@ export function CherryBlossomCheckPoints(props) {
   )
 }
 
-useGLTF.preload("/CherryBlossomCheckPoints.glb");
+useGLTF.preload("/~scarhatt/CherryBlossomCheckPoints.glb");
